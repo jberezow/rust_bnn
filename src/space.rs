@@ -1,14 +1,14 @@
 // This is the space that the clouds of points are generated in
 
 pub struct Space {
-    pub xmin: f32,
-    pub xmax: f32,
-    pub ymin: f32,
-    pub ymax: f32,
+    pub xmin: f64,
+    pub xmax: f64,
+    pub ymin: f64,
+    pub ymax: f64,
 }
 
 impl Space {
-    pub fn new(xmin: f32, xmax: f32, ymin: f32, ymax: f32) -> Space {
+    pub fn new(xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> Space {
         Space { xmin, xmax, ymin, ymax }
     }
 }

@@ -3,12 +3,12 @@
 use na::Vector2;
 
 pub struct Point2 {
-  pub x: Vector2<f32>,
+  pub x: Vector2<f64>,
   pub y: i8,
 }
 
 impl Point2 {
-  pub fn new(x: Vector2<f32>, y: i8) -> Point2 {
+  pub fn new(x: Vector2<f64>, y: i8) -> Point2 {
     Point2 { x, y }
   }
 }
