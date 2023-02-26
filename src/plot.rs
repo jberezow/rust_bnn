@@ -1,7 +1,8 @@
 use plotters::prelude::*;
-use crate::cloud::Cloud;
 use std::fs::File;
 use std::io::Write;
+
+use crate::cloud::Cloud;
 
 // 2D Cartesian Plot of Clouds
 pub struct CloudPlot {
@@ -37,6 +38,16 @@ impl CloudPlot{
 
     // Configure the coordinate system
     chart.configure_mesh().draw()?;
+
+    // Plot the axes
+    chart.draw_series(LineSeries::new(
+      vec![(0.0, -1.0), (0.0, 1.0)],
+      &BLACK,
+    ))?;
+    chart.draw_series(LineSeries::new(
+      vec![(-1.0, 0.0), (1.0, 0.0)],
+      &BLACK,
+    ))?;
 
     // Plot each cloud
     for cloud in &self.clouds {
