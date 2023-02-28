@@ -1,6 +1,7 @@
 // Bayesian Logistic Regression: basic case for classification
 
-use rand_distrs::{Normal, Distribution};
+use rand_distr::{Normal, Distribution};
+use na::Vector2;
 
 pub struct Model {
     pub w: Vector2<f64>,
@@ -8,28 +9,36 @@ pub struct Model {
     pub prior: Normal<f64>,
 }
 
-// Softmax for a vector with two classes
-fn softmax(x: Vector2<f64>) -> Vector2<f64> {
-    let exp_x = x.map(|x| x.exp());
-    let sum_exp_x = exp_x.sum();
-    exp_x / sum_exp_x
+// Softmax function one output
+fn softmax(z: f64) -> f64 {
+    let result = 1.0 / (1.0 + (-z).exp());
+    result
 }
 
 impl Model {
     pub fn new() -> Model {
         let w = Vector2::new(0.0, 0.0);
         let b = 0.0;
-        Model { w, b }
+        let prior = Normal::new(0.0, 1.0).unwrap();
+        Model { w, b, prior }
     }
 
-    pub fn draw_from_prior(&self) -> Model {
-        let w = self.w.map(|w| self.prior.sample(&mut rand::thread_rng()));
-        let b = self.prior.sample(&mut rand::thread_rng());
-        Model { w, b }
+    // Initialize weight and bias parameters from the prior
+    pub fn draw_from_prior(&mut self) {
+        self.w = self.w.map(|_| self.prior.sample(&mut rand::thread_rng()));
+        self.b = self.prior.sample(&mut rand::thread_rng());
     }
 
-    pub fn forward(&self, x: Vector2<f64>) -> Vector2<f64> {
+    pub fn forward(&self, x: Vector2<f64>) -> i8 {
         let z = self.w.dot(&x) + self.b;
-        softmax(z)
+        let result: i8 = softmax(z).round() as i8;
+        println!("z: {:?}, result: {:?}", z, result);
+        result
+    }
+
+    // Print model details
+    pub fn print(&self) {
+        println!("w: {:?}", self.w);
+        println!("b: {:?}", self.b);
     }
 }

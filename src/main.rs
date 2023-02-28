@@ -1,10 +1,13 @@
 mod point2;
 mod cloud;
 mod plot;
+mod blr;
 
 pub use na::Vector2;
 pub use point2::Point2;
 pub use plot::CloudPlot;
+pub use plot::ClassifierPlot;
+pub use blr::Model;
 
 fn main() {
     // Variables
@@ -27,4 +30,17 @@ fn main() {
 
     // Render the plot and save it to a file
     plot.render().unwrap();
+
+    // Init the model
+    let mut model = Model::new();
+
+    // Draw from the prior
+    model.draw_from_prior();
+
+    // Print model
+    model.print();
+
+    // Plot naive classification
+    let class_plot = ClassifierPlot::new(model, plot.clouds);
+    class_plot.render().unwrap();
 }
