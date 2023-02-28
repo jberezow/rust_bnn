@@ -20,10 +20,10 @@ fn main() {
     // Generate four clouds in each quadrant of the cartesian plane
     let mut clouds = Vec::new();
     for i in 0..c {
-        let x0 = (i % 2) as f64 - 0.5;
-        let x1 = (i / 2) as f64 - 0.5;
-        let y = if i == 0 || i == c - 1 { 0 } else { 1 };
-        let cloud = cloud::Cloud::new(Vector2::new(x0, x1), std, n, y as i8);
+        let x0 = f64::from(i % 2) - 0.5;
+        let x1 = f64::from(i / 2) - 0.5;
+        let y = i8::from(!(i == 0 || i == c - 1));
+        let cloud = cloud::Cloud::new(Vector2::new(x0, x1), std, n, y);
         clouds.push(cloud);
     }
 

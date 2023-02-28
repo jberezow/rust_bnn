@@ -16,8 +16,8 @@ pub struct ClassifierPlot {
 
 // Implement the ClassifierPlot struct
 impl ClassifierPlot {
-  pub fn new(models: Vec<Model>, clouds: Vec<Cloud>, title: String) -> ClassifierPlot {
-    ClassifierPlot {
+  #[must_use] pub fn new(models: Vec<Model>, clouds: Vec<Cloud>, title: String) -> Self {
+    Self {
       models,
       clouds,
       title,
@@ -70,7 +70,7 @@ impl ClassifierPlot {
 
 
     for (i, model) in self.models.iter().enumerate() {
-      println!("Plotting model number {}", i);
+      println!("Plotting model number {i}");
       // Plot the classifier
       let mut x: Vector2<f64> = Vector2::new(-1.0, -1.0);
       while x[0] <= 1.0 {
@@ -86,8 +86,7 @@ impl ClassifierPlot {
           };
 
           // Plot only this one point
-          let mut plot_now: Vec<Point2> = Vec::new();
-          plot_now.push(point);
+          let plot_now: Vec<Point2> = vec![point];
           chart.draw_series(
             plot_now.iter().map(|p| Circle::new((p.x[0], p.x[1]), 4.0, colour.filled()))
           )?;

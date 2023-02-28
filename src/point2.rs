@@ -8,8 +8,8 @@ pub struct Point2 {
 }
 
 impl Point2 {
-  pub fn new(x: Vector2<f64>, y: i8) -> Point2 {
-    Point2 { x, y }
+  #[must_use] pub fn new(x: Vector2<f64>, y: i8) -> Self {
+    Self { x, y }
   }
 }
 

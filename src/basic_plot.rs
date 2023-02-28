@@ -12,8 +12,8 @@ pub struct CloudPlot {
 
 // Implement the CloudPlot struct
 impl CloudPlot{
-  pub fn new(clouds: Vec<Cloud>) -> CloudPlot {
-    CloudPlot { clouds }
+  #[must_use] pub fn new(clouds: Vec<Cloud>) -> Self {
+    Self { clouds }
   }
 
   // Render the plot, with each cloud coloured according to class

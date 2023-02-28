@@ -11,16 +11,16 @@ pub struct Model {
 
 // Softmax function one output
 fn softmax(z: f64) -> f64 {
-    let result = 1.0 / (1.0 + (-z).exp());
-    result
+    
+    1.0 / (1.0 + (-z).exp())
 }
 
 impl Model {
-    pub fn new() -> Model {
+    #[must_use] pub fn new() -> Self {
         let w = Vector2::new(0.0, 0.0);
         let b = 0.0;
         let prior = Normal::new(0.0, 1.0).unwrap();
-        Model { w, b, prior }
+        Self { w, b, prior }
     }
 
     // Initialize weight and bias parameters from the prior
@@ -29,7 +29,7 @@ impl Model {
         self.b = self.prior.sample(&mut rand::thread_rng());
     }
 
-    pub fn forward(&self, x: Vector2<f64>) -> i8 {
+    #[must_use] pub fn forward(&self, x: Vector2<f64>) -> i8 {
         let z = self.w.dot(&x) + self.b;
         let result: i8 = softmax(z).round() as i8;
         // println!("z: {:?}, result: {:?}", z, result);
@@ -40,5 +40,12 @@ impl Model {
     pub fn print(&self) {
         println!("w: {:?}", self.w);
         println!("b: {:?}", self.b);
+    }
+}
+
+// Implement Default trait for Model
+impl Default for Model {
+    fn default() -> Self {
+        Self::new()
     }
 }
