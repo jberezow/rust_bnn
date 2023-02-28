@@ -32,7 +32,7 @@ impl Model {
     pub fn forward(&self, x: Vector2<f64>) -> i8 {
         let z = self.w.dot(&x) + self.b;
         let result: i8 = softmax(z).round() as i8;
-        println!("z: {:?}, result: {:?}", z, result);
+        // println!("z: {:?}, result: {:?}", z, result);
         result
     }
 
