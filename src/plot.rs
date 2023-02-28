@@ -128,18 +128,31 @@ impl ClassifierPlot {
 
     // Plot the classifier
     let mut x: Vector2<f64> = Vector2::new(-1.0, -1.0);
-    let mut points: Vec<Point2> = Vec::new();
     while x[0] <= 1.0 {
       while x[1] <= 1.0 {
         let y = self.model.forward(x);
-        points.push(Point2::new(x, y));
-        x[1] += 0.1;
+        let point: Point2 = Point2::new(x, y);
+        
+        // Plot the point according to its colour with 0.1 alpha
+        let colour = match y {
+          0 => RED.mix(0.05),
+          1 => BLUE.mix(0.05),
+          _ => BLACK.mix(0.05),
+        };
+
+        // Plot only this one point
+        let mut plot_now: Vec<Point2> = Vec::new();
+        plot_now.push(point);
+        chart.draw_series(
+          plot_now.iter().map(|p| Circle::new((p.x[0], p.x[1]), 4.0, colour.filled()))
+        )?;
+
+        x[1] += 0.01;
       }
-      x[0] += 0.1;
+
+      x[0] += 0.01;
       x[1] = -1.0;
     }
-
-    // Plot the classified points coloured according to class
 
     // Plot each cloud
     for cloud in &self.clouds {
