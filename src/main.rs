@@ -4,12 +4,14 @@ mod blr;
 mod prior;
 mod basic_plot;
 mod model_plot;
+mod random_walk;
 
 pub use na::Vector2;
 pub use point2::Point2;
 pub use basic_plot::CloudPlot;
 pub use model_plot::ClassifierPlot;
 pub use blr::Model;
+pub use random_walk::random_walk_metropolis;
 
 fn main() {
     // Variables
@@ -49,5 +51,6 @@ fn main() {
     // Plot naive classification
     let naive_title: String = "Naive Classification".to_string();
     let class_plot = ClassifierPlot::new(models, clouds, naive_title);
-    class_plot.render().unwrap();
+    class_plot.render().unwrap();  
+
 }

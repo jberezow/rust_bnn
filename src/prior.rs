@@ -22,4 +22,3 @@ impl <T: Distribution<f64> + Continuous<f64, f64>> Prior<T> {
         self.dist.ln_pdf(x)
     }
 }
-

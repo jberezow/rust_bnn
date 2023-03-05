@@ -68,9 +68,12 @@ impl ClassifierPlot {
       &BLACK,
     ))?;
 
+    let num_samples: u32 = self.models.len() as u32;
+    let ratio: f64 = 0.5 / f64::from(num_samples);
 
     for (i, model) in self.models.iter().enumerate() {
-      println!("Plotting model number {i}");
+      
+      println!("Plotting Model {} of {}", i + 1, num_samples);
       // Plot the classifier
       let mut x: Vector2<f64> = Vector2::new(-1.0, -1.0);
       while x[0] <= 1.0 {
@@ -80,9 +83,9 @@ impl ClassifierPlot {
           
           // Plot the point according to its colour with 0.1 alpha
           let colour = match y {
-            0 => RED.mix(0.01),
-            1 => BLUE.mix(0.01),
-            _ => BLACK.mix(0.01),
+            0 => RED.mix(ratio),
+            1 => BLUE.mix(ratio),
+            _ => BLACK.mix(ratio),
           };
 
           // Plot only this one point

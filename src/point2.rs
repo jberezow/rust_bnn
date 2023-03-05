@@ -19,3 +19,11 @@ impl std::fmt::Display for Point2 {
     write!(f, "Point: ({}, {}) -> {}", self.x[0], self.x[1], self.y)
   }
 }
+
+// Copy trait
+impl Clone for Point2 {
+  fn clone(&self) -> Self {
+    Self { x: self.x, y: self.y }
+  }
+}
+impl Copy for Point2 {}
