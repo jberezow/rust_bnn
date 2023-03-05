@@ -46,7 +46,7 @@ impl Model {
     }
 
     // Log likelihood for a vector of point2
-    pub fn log_likelihood(&self, clouds:Vec<Cloud>) -> f64 {
+    pub fn log_likelihood(&self, clouds:&Vec<Cloud>) -> f64 {
         let mut points: Vec<Point2> = Vec::new();
         for cloud in clouds.iter() {
             for point in cloud.points.as_ref().unwrap().iter() {
@@ -66,7 +66,7 @@ impl Model {
         self.w.iter().map(|x| self.prior.log_prob(*x)).sum::<f64>() + self.prior.log_prob(self.b)
     }
 
-    pub fn log_posterior(&self, clouds: Vec<Cloud>) -> f64 {
+    pub fn log_posterior(&self, clouds: &Vec<Cloud>) -> f64 {
         self.log_likelihood(clouds) + self.log_prior()
     }
 
@@ -80,5 +80,12 @@ impl Default for Model {
         let normal_dist = Normal::new(0.0, 1.0).unwrap();
         let prior = Prior::new(normal_dist);
         Self::new(w,b,prior)
+    }
+}
+
+// Implement clone trait for Model
+impl Clone for Model {
+    fn clone(&self) -> Self {
+        Self { w: self.w, b: self.b, prior: self.prior.clone() }
     }
 }
