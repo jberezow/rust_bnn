@@ -77,7 +77,7 @@ impl Default for Model {
     fn default() -> Self {
         let w: Vector2<f64> = Vector2::new(0.0, 0.0);
         let b: f64 = 0.0;
-        let normal_dist = Normal::new(0.0, 1.0).unwrap();
+        let normal_dist = Normal::new(0.0, 0.5).unwrap();
         let prior = Prior::new(normal_dist);
         Self::new(w,b,prior)
     }

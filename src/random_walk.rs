@@ -4,14 +4,28 @@
 use crate::blr::Model;
 // use crate::point2::Point2;
 use crate::cloud::Cloud;
+use rand_distr::{Normal, Distribution};
+
+pub fn gaussian_perturbation(model: &mut Model) {
+    let w0_dist = Normal::new(0.0, 0.8).unwrap();
+    let w1_dist = Normal::new(0.0, 0.8).unwrap();
+    let b_dist = Normal::new(0.0, 0.8).unwrap();
+    model.w[0] += w0_dist.sample(&mut rand::thread_rng());
+    model.w[1] += w1_dist.sample(&mut rand::thread_rng());
+    model.b += b_dist.sample(&mut rand::thread_rng());
+}
 
 pub fn single_step_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>) -> &'a mut Model {
 
     // Generate a new model
     let mut new_model: Model = Model::default();
 
-    // Draw from the prior
-    new_model.draw_from_prior();
+    // Copy model params from old model
+    new_model.w = model.w.clone();
+    new_model.b = model.b;
+
+    // Add random normal perturbation to model params
+    gaussian_perturbation(&mut new_model);
 
     // Calculate the log likelihood of the new model
     let new_log_likelihood = new_model.log_likelihood(clouds);
@@ -37,18 +51,21 @@ pub fn single_step_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>) 
     // Accept the new model if the log acceptance probability is greater than 0
     if log_acceptance_probability > 0.0 {
         *model = new_model;
-        println!("Accepted new model with log acceptance probability: {}", log_acceptance_probability);
+        println!("Accepted superior model with log acceptance probability: {}", log_acceptance_probability);
     }
     else if log_acceptance_probability < 0.0 {
         // Generate a random number between 0 and 1
         let random_number = rand::random::<f64>();
 
         // Accept the new model if the random number is less than the acceptance probability
-        if random_number < (-log_acceptance_probability).exp() {
+        if random_number < (log_acceptance_probability).exp() {
             *model = new_model;
-            println!("Accepted new model with log acceptance probability: {}", log_acceptance_probability.exp());
+            println!("Accepted inferior model with log acceptance probability: {} and random number {}", log_acceptance_probability.exp(), random_number);
         }
-    }
+        else {
+            println!("Sticking with old model with log acceptance probability {}", log_acceptance_probability);
+        }
+    } 
 
     model
 }
