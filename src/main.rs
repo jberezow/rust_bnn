@@ -1,6 +1,7 @@
 mod point2;
 mod cloud;
 mod blr;
+mod prior;
 mod basic_plot;
 mod model_plot;
 
@@ -15,7 +16,7 @@ fn main() {
     let c = 4;
     let n = 100;
     let std: Vector2<f64> = Vector2::new(0.1, 0.1);
-    let model_samples = 50;
+    let model_samples = 10;
 
     // Generate four clouds in each quadrant of the cartesian plane
     let mut clouds = Vec::new();
@@ -36,7 +37,8 @@ fn main() {
     // Init the model samples
     let mut models = Vec::new();
     for _ in 0..model_samples {
-        let mut model = Model::new();
+        // Default model
+        let mut model: Model = Model::default();
 
         // Draw from the prior
         model.draw_from_prior();
