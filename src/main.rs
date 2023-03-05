@@ -18,7 +18,7 @@ fn main() {
     let c = 4;
     let n = 100;
     let std: Vector2<f64> = Vector2::new(0.1, 0.1);
-    let model_samples = 10;
+    let model_samples = 50;
 
     // Generate four clouds in each quadrant of the cartesian plane
     let mut clouds = Vec::new();
@@ -49,8 +49,15 @@ fn main() {
     }
 
     // Plot naive classification
-    let naive_title: String = "Naive Classification".to_string();
-    let class_plot = ClassifierPlot::new(models, clouds, naive_title);
-    class_plot.render().unwrap();  
+    // let naive_title: String = "Naive Classification".to_string();
+    // let class_plot = ClassifierPlot::new(models, clouds, naive_title);
+    // class_plot.render().unwrap();
+
+    // Plot classification after random walk metropolis
+    let rw_title: String = "Random Walk Metropolis".to_string();
+    let mut model: Model = Model::default();
+    let rw_models = random_walk_metropolis(&mut model, &clouds, model_samples);
+    let class_plot = ClassifierPlot::new(rw_models, clouds, rw_title);
+    class_plot.render().unwrap();
 
 }

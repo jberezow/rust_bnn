@@ -37,6 +37,7 @@ pub fn single_step_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>) 
     // Accept the new model if the log acceptance probability is greater than 0
     if log_acceptance_probability > 0.0 {
         *model = new_model;
+        println!("Accepted new model with log acceptance probability: {}", log_acceptance_probability);
     }
     else if log_acceptance_probability < 0.0 {
         // Generate a random number between 0 and 1
@@ -45,23 +46,25 @@ pub fn single_step_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>) 
         // Accept the new model if the random number is less than the acceptance probability
         if random_number < (-log_acceptance_probability).exp() {
             *model = new_model;
+            println!("Accepted new model with log acceptance probability: {}", log_acceptance_probability.exp());
         }
     }
 
     model
 }
 
-pub fn random_walk_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>, n: usize) -> Vec<&'a mut Model>{
+pub fn random_walk_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>, n: usize) -> Vec<Model>{
     // Init the samples
-    let mut samples: Vec<&'a mut Model> = Vec::new();
+    let mut samples: Vec<Model> = Vec::new();
 
     // Clone the model for first step
     let mut sample: Model = model.clone();
 
     // Run a single step metropolis sampler for n iterations
     for _ in 0..n {
-        let sample = single_step_metropolis(&mut sample, clouds);
-        samples.push(sample);
+        let sample: &mut Model = single_step_metropolis(&mut sample, clouds);
+        let record_state: Model = sample.clone();
+        samples.push(record_state);
     }
 
     samples
