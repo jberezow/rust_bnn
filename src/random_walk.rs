@@ -7,9 +7,9 @@ use crate::cloud::Cloud;
 use rand_distr::{Normal, Distribution};
 
 pub fn gaussian_perturbation(model: &mut Model) {
-    let w0_dist = Normal::new(0.0, 0.8).unwrap();
-    let w1_dist = Normal::new(0.0, 0.8).unwrap();
-    let b_dist = Normal::new(0.0, 0.8).unwrap();
+    let w0_dist = Normal::new(0.0, 0.3).unwrap();
+    let w1_dist = Normal::new(0.0, 0.3).unwrap();
+    let b_dist = Normal::new(0.0, 0.3).unwrap();
     model.w[0] += w0_dist.sample(&mut rand::thread_rng());
     model.w[1] += w1_dist.sample(&mut rand::thread_rng());
     model.b += b_dist.sample(&mut rand::thread_rng());

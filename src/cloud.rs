@@ -1,8 +1,5 @@
 // This represents the generating distribution for a single cloud of points
-// Imports for generating random numbers from a normal distribution
 use rand_distr::{Normal, Distribution};
-
-// import Vector2 from na
 use na::core::Vector2;
 
 use crate::point2::Point2;

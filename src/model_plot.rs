@@ -69,7 +69,7 @@ impl ClassifierPlot {
     ))?;
 
     let num_samples: u32 = self.models.len() as u32;
-    let ratio: f64 = 0.5 / f64::from(num_samples);
+    let ratio: f64 = 0.8 / f64::from(num_samples);
 
     for (i, model) in self.models.iter().enumerate() {
       

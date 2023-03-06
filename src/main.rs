@@ -16,9 +16,9 @@ pub use random_walk::random_walk_metropolis;
 fn main() {
     // Variables
     let c = 4;
-    let n = 250;
-    let std: Vector2<f64> = Vector2::new(0.15, 0.15);
-    let model_samples = 5000;
+    let n = 500;
+    let std: Vector2<f64> = Vector2::new(0.1, 0.1);
+    let model_samples = 20000;
 
     // Generate four clouds in each quadrant of the cartesian plane
     let mut clouds = Vec::new();
@@ -56,10 +56,16 @@ fn main() {
     // Plot classification after random walk metropolis
     let rw_title: String = "Random Walk Metropolis".to_string();
     let mut model: Model = Model::default();
-    let rw_models = random_walk_metropolis(&mut model, &clouds, model_samples);
+
+    // Sample random walk four times
+    let l = 10;
+    let mut rw_models = random_walk_metropolis(&mut model, &clouds, model_samples/l);
+    for _ in 0..l-1 {
+        rw_models.extend(random_walk_metropolis(&mut model, &clouds, model_samples/l));
+    }
 
     // Use every 100th model
-    let rw_models = rw_models.iter().step_by(100).cloned().collect::<Vec<Model>>();
+    let rw_models = rw_models.iter().step_by(400).cloned().collect::<Vec<Model>>();
     let class_plot = ClassifierPlot::new(rw_models, clouds, rw_title);
     class_plot.render().unwrap();
 
