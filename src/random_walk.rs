@@ -2,8 +2,8 @@
 
 // use na::Vector2;
 use crate::blr::Model;
-// use crate::point2::Point2;
-use crate::cloud::Cloud;
+use crate::point2::Point2;
+// use crate::dataset::Cloud;
 use rand_distr::{Normal, Distribution};
 
 pub fn gaussian_perturbation(model: &mut Model) {
@@ -15,7 +15,7 @@ pub fn gaussian_perturbation(model: &mut Model) {
     model.b += b_dist.sample(&mut rand::thread_rng());
 }
 
-pub fn single_step_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>) -> &'a mut Model {
+pub fn single_step_metropolis<'a>(model: &'a mut Model, points: &'a Vec<Point2>) -> &'a mut Model {
 
     // Generate a new model
     let mut new_model: Model = Model::default();
@@ -28,10 +28,10 @@ pub fn single_step_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>) 
     gaussian_perturbation(&mut new_model);
 
     // Calculate the log likelihood of the new model
-    let new_log_likelihood = new_model.log_likelihood(clouds);
+    let new_log_likelihood = new_model.log_likelihood(points);
 
     // Calculate the log likelihood of the old model
-    let old_log_likelihood = model.log_likelihood(clouds);
+    let old_log_likelihood = model.log_likelihood(points);
 
     // Calculate the log prior of the new model
     let new_log_prior = new_model.log_prior();
@@ -70,7 +70,7 @@ pub fn single_step_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>) 
     model
 }
 
-pub fn random_walk_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>, n: usize) -> Vec<Model>{
+pub fn random_walk_metropolis<'a>(model: &'a mut Model, points: &'a Vec<Point2>, n: usize) -> Vec<Model>{
     // Init the samples
     let mut samples: Vec<Model> = Vec::new();
 
@@ -79,7 +79,7 @@ pub fn random_walk_metropolis<'a>(model: &'a mut Model, clouds: &'a Vec<Cloud>, 
 
     // Run a single step metropolis sampler for n iterations
     for _ in 0..n {
-        let sample: &mut Model = single_step_metropolis(&mut sample, clouds);
+        let sample: &mut Model = single_step_metropolis(&mut sample, points);
         let record_state: Model = sample.clone();
         samples.push(record_state);
     }

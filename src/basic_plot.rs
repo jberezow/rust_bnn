@@ -2,18 +2,19 @@ use plotters::prelude::*;
 use std::fs::File;
 use std::io::Write;
 
-use crate::cloud::Cloud;
+// use crate::dataset::Cloud;
+use crate::point2::Point2;
 
 // 2D Cartesian Plot of Clouds
 pub struct CloudPlot {
-  pub clouds: Vec<Cloud>,
+  pub data: Vec<Point2>,
   
 }
 
 // Implement the CloudPlot struct
 impl CloudPlot{
-  #[must_use] pub fn new(clouds: Vec<Cloud>) -> Self {
-    Self { clouds }
+  #[must_use] pub fn new(data: Vec<Point2>) -> Self {
+    Self { data }
   }
 
   // Render the plot, with each cloud coloured according to class
@@ -50,26 +51,21 @@ impl CloudPlot{
       &BLACK,
     ))?;
 
-    // Plot each cloud
-    for cloud in &self.clouds {
-      // Get the points from the cloud
-      let points = cloud.points.as_ref().unwrap();
+    // Plot the data
+    for point in &self.data {
 
-      // Get the colour for the cloud
-      let colour = match cloud.y {
+      // Get the colour for the point
+      let colour = match point.y {
         0 => RED,
         1 => BLUE,
         _ => BLACK,
       };
 
-      // Add points to the file without overwriting it
-      for p in points {
-        writeln!(file, "{} {}", p.x[0], p.x[1])?;
-      }
+      writeln!(file, "{} {}", point.x[0], point.x[1])?;
 
-      // Plot the points
+      // Plot the point according to colour
       chart.draw_series(
-        points.iter().map(|p| Circle::new((p.x[0], p.x[1]), 4.0, colour.filled()))
+        std::iter::once(Circle::new((point.x[0], point.x[1]), 4.0, colour.filled()))
       )?;
     }
 

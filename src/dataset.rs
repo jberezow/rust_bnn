@@ -4,6 +4,10 @@ use na::core::Vector2;
 
 use crate::point2::Point2;
 
+pub trait Dataset {
+    fn generate(&self, n: usize) -> Vec<Point2>;
+}
+
 pub struct Cloud {
     pub mean: Vector2<f64>,
     pub std: Vector2<f64>,
@@ -33,5 +37,12 @@ impl Cloud {
         }
 
         points
+    }
+}
+
+// Implement Dataset trait for Cloud
+impl Dataset for Cloud {
+    fn generate(&self, n: usize) -> Vec<Point2> {
+        self.generate(n)
     }
 }

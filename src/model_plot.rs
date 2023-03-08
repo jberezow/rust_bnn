@@ -3,28 +3,28 @@ use std::fs::File;
 use std::io::Write;
 use na::Vector2;
 
-use crate::cloud::Cloud;
+// use crate::dataset::Cloud;
 use crate::blr::Model;
 use crate::point2::Point2;
 
 // 2D plot of classifier and data
 pub struct ClassifierPlot {
   pub models: Vec<Model>,
-  pub clouds: Vec<Cloud>,
+  pub data: Vec<Point2>,
   pub title: String,
 }
 
 // Implement the ClassifierPlot struct
 impl ClassifierPlot {
-  #[must_use] pub fn new(models: Vec<Model>, clouds: Vec<Cloud>, title: String) -> Self {
+  #[must_use] pub fn new(models: Vec<Model>, data: Vec<Point2>, title: String) -> Self {
     Self {
       models,
-      clouds,
+      data,
       title,
     }
   }
 
-  // Render the plot, with each cloud coloured according to class
+  // Render the plot, with each point coloured according to class
   pub fn render(&self) -> Result<(), Box<dyn std::error::Error>> {
     // Print out Plot Title
     println!("{}","=".repeat(50));
@@ -49,7 +49,7 @@ impl ClassifierPlot {
 
     // Create a 2d cartesian coordinate system
     let mut chart = ChartBuilder::on(&root)
-      .caption("XOR Cloud Data", ("sans-serif", 30).into_font())
+      .caption("Data", ("sans-serif", 30).into_font())
       .margin(5)
       .x_label_area_size(30)
       .y_label_area_size(30)
@@ -102,26 +102,21 @@ impl ClassifierPlot {
       }
     }
 
-    // Plot each cloud
-    for cloud in &self.clouds {
-      // Get the points from the cloud
-      let points = cloud.points.as_ref().unwrap();
+    // Plot the data
+    for point in &self.data {
 
-      // Get the colour for the cloud
-      let colour = match cloud.y {
+      // Get the colour for the point
+      let colour = match point.y {
         0 => RED,
         1 => BLUE,
         _ => BLACK,
       };
 
-      // Add points to the file without overwriting it
-      for p in points {
-        writeln!(file, "{} {}", p.x[0], p.x[1])?;
-      }
+      writeln!(file, "{} {}", point.x[0], point.x[1])?;
 
-      // Plot the points
+      // Plot the point according to colour
       chart.draw_series(
-        points.iter().map(|p| Circle::new((p.x[0], p.x[1]), 4.0, colour.filled()))
+        std::iter::once(Circle::new((point.x[0], point.x[1]), 4.0, colour.filled()))
       )?;
     }
 

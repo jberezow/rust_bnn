@@ -3,7 +3,7 @@ use na::Vector2;
 use statrs::distribution::Normal;
 use crate::prior::Prior;
 use crate::point2::Point2;
-use crate::cloud::Cloud;
+// use crate::dataset::Cloud;
 
 pub struct Model {
     pub w: Vector2<f64>,
@@ -46,17 +46,25 @@ impl Model {
     }
 
     // Log likelihood for a vector of point2
-    pub fn log_likelihood(&self, clouds:&Vec<Cloud>) -> f64 {
-        let mut points: Vec<Point2> = Vec::new();
-        for cloud in clouds.iter() {
-            for point in cloud.points.as_ref().unwrap().iter() {
-                points.push(*point);
-            }
-        }
+    // pub fn log_likelihood(&self, clouds:&Vec<Cloud>) -> f64 {
+    //     let mut points: Vec<Point2> = Vec::new();
+    //     for cloud in clouds.iter() {
+    //         for point in cloud.points.as_ref().unwrap().iter() {
+    //             points.push(*point);
+    //         }
+    //     }
 
+    //     let mut result: f64 = 0.0;
+    //     for point in points {
+    //         result += self.likelihood(point);
+    //     }
+    //     result
+    // }
+
+    pub fn log_likelihood(&self, points: &Vec<Point2>) -> f64 {
         let mut result: f64 = 0.0;
         for point in points {
-            result += self.likelihood(point);
+            result += self.likelihood(*point);
         }
         result
     }
@@ -66,8 +74,12 @@ impl Model {
         self.w.iter().map(|x| self.prior.log_prob(*x)).sum::<f64>() + self.prior.log_prob(self.b)
     }
 
-    pub fn log_posterior(&self, clouds: &Vec<Cloud>) -> f64 {
-        self.log_likelihood(clouds) + self.log_prior()
+    // pub fn log_posterior(&self, clouds: &Vec<Cloud>) -> f64 {
+    //     self.log_likelihood(clouds) + self.log_prior()
+    // }
+
+    pub fn log_posterior(&self, points: &Vec<Point2>) -> f64 {
+        self.log_likelihood(points) + self.log_prior()
     }
 
 }
