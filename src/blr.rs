@@ -5,6 +5,8 @@ use crate::prior::Prior;
 use crate::point2::Point2;
 // use crate::dataset::Cloud;
 
+// Import natural logarithm function for f64
+
 pub struct Model {
     pub w: Vector2<f64>,
     pub b: f64,
@@ -14,7 +16,6 @@ pub struct Model {
 
 // Softmax function one output
 fn softmax(z: f64) -> f64 {
-    
     1.0 / (1.0 + (-z).exp())
 }
 
@@ -45,22 +46,6 @@ impl Model {
         }
     }
 
-    // Log likelihood for a vector of point2
-    // pub fn log_likelihood(&self, clouds:&Vec<Cloud>) -> f64 {
-    //     let mut points: Vec<Point2> = Vec::new();
-    //     for cloud in clouds.iter() {
-    //         for point in cloud.points.as_ref().unwrap().iter() {
-    //             points.push(*point);
-    //         }
-    //     }
-
-    //     let mut result: f64 = 0.0;
-    //     for point in points {
-    //         result += self.likelihood(point);
-    //     }
-    //     result
-    // }
-
     pub fn log_likelihood(&self, points: &Vec<Point2>) -> f64 {
         let mut result: f64 = 0.0;
         for point in points {
@@ -69,14 +54,9 @@ impl Model {
         result
     }
 
-
     pub fn log_prior(&self) -> f64 {
         self.w.iter().map(|x| self.prior.log_prob(*x)).sum::<f64>() + self.prior.log_prob(self.b)
     }
-
-    // pub fn log_posterior(&self, clouds: &Vec<Cloud>) -> f64 {
-    //     self.log_likelihood(clouds) + self.log_prior()
-    // }
 
     pub fn log_posterior(&self, points: &Vec<Point2>) -> f64 {
         self.log_likelihood(points) + self.log_prior()
@@ -89,7 +69,7 @@ impl Default for Model {
     fn default() -> Self {
         let w: Vector2<f64> = Vector2::new(0.0, 0.0);
         let b: f64 = 0.0;
-        let normal_dist = Normal::new(0.0, 2.0).unwrap();
+        let normal_dist = Normal::new(0.0, 10.0).unwrap();
         let prior = Prior::new(normal_dist);
         Self::new(w,b,prior)
     }
